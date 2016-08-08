@@ -17,12 +17,20 @@ EYES = ((119, 85), (207, 86))
 WHITES = 20
 PUPIL = 5
 GRAVITY = -1 #1 = googley eyes, -1 = staring into your soul
+MAX_ACC = 10
+
+def clamp(val, minmax):
+    if val < -minmax:
+        val = -minmax
+    if val > minmax:
+        val = minmax
+    return val
 
 while True:
     pyb.wfi()
     ival = imu.get_acceleration()
-    xoff = int(ival['x']*10*GRAVITY)
-    yoff = int(ival['y']*10*GRAVITY)
+    xoff = clamp(int(ival['x']*10*GRAVITY), MAX_ACC)
+    yoff = clamp(int(ival['y']*10*GRAVITY), MAX_ACC)
     for i in EYES:
         ugfx.fill_circle(i[0], i[1], WHITES, ugfx.WHITE)
         ugfx.fill_circle(i[0]+xoff, i[1]+yoff, PUPIL, ugfx.BLACK)
